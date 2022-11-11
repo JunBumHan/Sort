@@ -13,5 +13,8 @@ int main() {
         sort->arr[i] = rand()%101;
 
 
+    sort->mergeSort(sort, 0, 9);
+    sort->print(sort);
+
 }
 
