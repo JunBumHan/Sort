@@ -9,6 +9,7 @@ struct Sort {
     void (*insertSort)(struct Sort * sort);
     void (*quickSort)(struct Sort * sort, int left, int right);
     void (*mergeSort)(struct Sort * sort, int left, int right);
+    void (*heapSort)(struct Sort * sort);
     void (*print)(struct Sort * sort);
 
 
@@ -26,6 +27,7 @@ void funcSelectSort(struct Sort * sort);
 void funcInsertSort(struct Sort * sort);
 void funcQuickSort(struct Sort * sort, int left, int right);
 void funcMergeSort(struct Sort * sort, int left, int right);
+void funcHeapSort(struct Sort * sort);
 void funcPrint(struct Sort * sort);
 
 struct Sort * sort_init(void) {
@@ -38,6 +40,7 @@ struct Sort * sort_init(void) {
     sort->insertSort = funcInsertSort;
     sort->quickSort = funcQuickSort;
     sort->mergeSort = funcMergeSort;
+    sort->heapSort = funcHeapSort;
     sort->print = funcPrint;
 
     //변수 (속성)
@@ -180,6 +183,48 @@ void funcMergeSort(struct Sort * sort, int left, int right) {
 
     return;
 }
+
+// HEAP SORT
+
+void insertMaxHeap(struct Sort * sort, int item, int heapIndex) {
+    int i = heapIndex;
+    while((i != 1) && (item > sort->arr[i/2])) {
+        sort->arr[i] = sort->arr[i/2];
+        i /= 2;
+    }
+    sort->arr[i] = item;
+}
+
+int deleteMaxheap(struct Sort * sort, int heapIndex) {
+    int parent, child, item, temp;
+    item = sort->arr[1];
+    temp = sort->arr[heapIndex];
+    parent = 1, child = 2;
+    while(child <= heapIndex) {
+        if((child < heapIndex) && (sort->arr[child] < sort->arr[child+1]))
+            child++;
+        if(temp >= sort->arr[child]) break;
+        sort->arr[parent] = sort->arr[child];
+        parent = child;
+        child *= 2;
+    }
+    sort->arr[parent] = temp;
+    return item;
+}
+
+void funcHeapSort(struct Sort * sort) {
+    int heapIndex = 0;
+    for(int i = 0; i < sort->length; ++i) {
+        heapIndex++;
+        insertMaxHeap(sort, sort->arr[i], heapIndex);
+    }
+
+    for(int i = sort->length-1; i >= 0; --i) {
+        sort->arr[i] = deleteMaxheap(sort, heapIndex);
+        heapIndex--;
+    }
+}
+//// 쌤.
 
 // Array print
 void funcPrint(struct Sort * sort) {

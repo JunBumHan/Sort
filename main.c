@@ -12,8 +12,7 @@ int main() {
     for(int i = sort->startIdx; i < sort->length; ++i) 
         sort->arr[i] = rand()%101;
 
-
-    sort->mergeSort(sort, 0, 9);
+    sort->quickSort(sort, sort->startIdx, sort->lastIdx);
     sort->print(sort);
 
 }
