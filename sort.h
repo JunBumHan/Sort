@@ -1,55 +1,67 @@
+/* 코드 읽기 전 필독  
+ * C언어의 함수 포인터를 이용해서 객체처럼 코드를 작성했습니다.
+ * 그러므로 객체 지향적인 개념을 사용할 것이므로 유의해 주시기 바랍니다.
+ */
+
 #define SWAP(X, Y) {int TEMP = X; X = Y; Y = TEMP;}
-#define MAX_SIZE 10
-#define SIZE 10
+#define MAX_SIZE 100
+#define SIZE 25
 
-struct Sort {
+struct Sort { // Sort 클래스 작성 부분   
 
-    void (*bubleSort)(struct Sort * sort);
-    void (*selectSort)(struct Sort * sort);
-    void (*insertSort)(struct Sort * sort);
-    void (*quickSort)(struct Sort * sort, int left, int right);
-    void (*mergeSort)(struct Sort * sort, int left, int right);
-    void (*heapSort)(struct Sort * sort);
-    void (*print)(struct Sort * sort);
+    // 함수[메소드] (기능)
+    void (*selectSort)  (struct Sort * sort);   // 선택 정렬 함수 포인터
+    void (*insertSort)  (struct Sort * sort);   // 삽입 정렬 함수 포인터
+    void (*bubleSort)   (struct Sort * sort);   // 거품 정렬 함수 포인터
+    void (*quickSort)   (struct Sort * sort, int left, int right);  // 빠른 정렬 함수 포인터
+    void (*mergeSort)   (struct Sort * sort, int left, int right);  // 합병 정렬 함수 포인터
+    void (*heapSort)    (struct Sort * sort);   // 힙 정렬 함수 포인터
+    void (*print)       (struct Sort * sort);   // 출력 함수 포인터
+    void (*termination) (struct Sort * sort);   // 종료 함수 포인터
 
-
+    // 변수 (속성)
     int arr[MAX_SIZE];
     int temp[MAX_SIZE];
-
     int length;
-    int startIdx;
-    int lastIdx;
+    int startIndex;
+    int lastIndex;
 
 };
 
-void funcBubleSort(struct Sort * sort);
-void funcSelectSort(struct Sort * sort);
-void funcInsertSort(struct Sort * sort);
-void funcQuickSort(struct Sort * sort, int left, int right);
-void funcMergeSort(struct Sort * sort, int left, int right);
-void funcHeapSort(struct Sort * sort);
-void funcPrint(struct Sort * sort);
+// 함수 원형 선언 부분
+void funcSelectSort (struct Sort * sort);       // 선택 정렬 함수
+void funcInsertSort (struct Sort * sort);       // 삽입 정렬 함수
+void funcBubleSort  (struct Sort * sort);       // 거품 정렬 함수
+void funcQuickSort  (struct Sort * sort, int left, int right);    // 빠른 정렬 함수
+void funcMergeSort  (struct Sort * sort, int left, int right);    // 합병 정렬 함수
+void funcHeapSort   (struct Sort * sort);       // 힙 정렬 함수
+void funcPrint      (struct Sort * sort);       // 출력 함수
+void funcTermination(struct Sort * sort);       // 종료 함수
 
-struct Sort * sort_init(void) {
+
+
+struct Sort * sort_init(void) { // Sort 클래스 인스턴화 함수
     
-    struct Sort * sort = (struct Sort *)malloc(sizeof(struct Sort));
-    
-    // 메소드 (기능)
-    sort->bubleSort = funcBubleSort;
-    sort->selectSort = funcSelectSort;
-    sort->insertSort = funcInsertSort;
-    sort->quickSort = funcQuickSort;
-    sort->mergeSort = funcMergeSort;
-    sort->heapSort = funcHeapSort;
-    sort->print = funcPrint;
+    struct Sort * sort = (struct Sort *)malloc(sizeof(struct Sort));    // 동적 할당
+    // 함수[메소드] (기능)
+    sort->selectSort    = funcSelectSort;   
+    sort->insertSort    = funcInsertSort;
+    sort->bubleSort     = funcBubleSort;
+    sort->quickSort     = funcQuickSort;
+    sort->mergeSort     = funcMergeSort;
+    sort->heapSort      = funcHeapSort;
+    sort->print         = funcPrint;
+    sort->termination   = funcTermination;
+
 
     //변수 (속성)
-    sort->length = SIZE;
-    sort->startIdx = 0;
-    sort->lastIdx = SIZE - 1;    
+    sort->length        = SIZE;
+    sort->startIndex    = 0;
+    sort->lastIndex     = SIZE - 1;    
     
     return sort;
 }
+
 
 // BUBBLE SORT
 
@@ -193,6 +205,8 @@ void insertMaxHeap(struct Sort * sort, int item, int heapIndex) {
         i /= 2;
     }
     sort->arr[i] = item;
+
+    return;
 }
 
 int deleteMaxheap(struct Sort * sort, int heapIndex) {
@@ -223,13 +237,22 @@ void funcHeapSort(struct Sort * sort) {
         sort->arr[i] = deleteMaxheap(sort, heapIndex);
         heapIndex--;
     }
+
+    return;
 }
-//// 쌤.
+//// 쌤.    
 
 // Array print
+// arr의 내용을 출력해주는 함수 입니다.
 void funcPrint(struct Sort * sort) {
     for(int i = 0; i < sort->length; ++i) 
         printf("%d ", sort->arr[i]);
     
+    return;
+}
+
+void funcTermination(struct Sort * sort) {
+    free(sort);
+
     return;
 }
