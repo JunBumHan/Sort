@@ -9,8 +9,8 @@
         X = Y;        \
         Y = TEMP;     \
     }
-#define MAX_SIZE 100
-#define SIZE 25
+#define MAX_SIZE 100 // MAX_SIZE : 100
+#define SIZE 25      // SIZE : 25
 
 struct Sort
 { // Sort 클래스 작성 부분
@@ -26,11 +26,11 @@ struct Sort
     void (*termination)(struct Sort *sort); // 종료 함수 포인터
 
     // 변수 (속성)
-    int arr[MAX_SIZE];
-    int temp[MAX_SIZE];
-    int length;
-    int startIndex;
-    int lastIndex;
+    int arr[MAX_SIZE];  // 정렬에 사용될 배열
+    int temp[MAX_SIZE]; // 합병정렬과 퀵정렬을 위해 사용되는 배열
+    int length;         // 배열의 크기
+    int startIndex;     // arr의 시작 색인
+    int lastIndex;      // arr의 마지막 색인
 };
 
 // 함수 원형 선언 부분
@@ -48,7 +48,7 @@ struct Sort *sort_init(void)
 
     struct Sort *sort = (struct Sort *)malloc(sizeof(struct Sort)); // 동적 할당
     // 함수[메소드] (기능)
-    sort->selectSort = funcSelectSort; // 함수 원형 포인터에 함수 주소 대입
+    sort->selectSort = funcSelectSort; // 함수 원형 포인터에 함수 주소 대입 ( 아래도 이 코드와 같음 )
     sort->insertSort = funcInsertSort;
     sort->bubbleSort = funcbubbleSort;
     sort->quickSort = funcQuickSort;
@@ -143,9 +143,13 @@ int partition(struct Sort *sort, int left, int right)
     return (i + 1);                           // pivot의 위치 반환
 }
 
+// funcQuickSort funcQuickSortStart를 호출하는 함수 입니다. 반환형은 void 이며, 오직 함수 호출만 담당합니다.
+// funcQuickSortStart를 바로 호출하지 않는 이유. 매인 문에서 Sort 클래스(구조체)를 인스턴스화(생성) 했을 때 간결한 호출을 위해
+// 일부로 funcQickSortStart를 호출하지 않고 funcQickSort를 호출하게 만들었습니다.
 void funcQuickSort(struct Sort *sort)
 {
-    funcQuickSortStart(sort, sort->startIndex, sort->lastIndex);
+    funcQuickSortStart(sort, sort->startIndex, sort->lastIndex); // funcQuickSortStart 함수 호출
+
     return;
 }
 
@@ -196,6 +200,10 @@ void merge(struct Sort *sort, int left, int mid, int right)
     return;
 }
 
+// MERGE SORT
+
+// funcMergeSortStart를 호출하는 함수 입니다. 반환형은 void 이며, 오직 함수 호출만 담당합니다.
+// 바로 funcMergeSortStart를 호출하지 않는 이유는 위 funcQuickSort와 같습니다.
 void funcMergeSort(struct Sort *sort)
 {
     funcMergeSortStart(sort, sort->startIndex, sort->lastIndex);
@@ -221,55 +229,56 @@ void funcMergeSortStart(struct Sort *sort, int left, int right)
     return;
 }
 
-// HEAP SORT
-
+// 최대 힙 트리를 만드는 함수 입니다.
 void insertMaxHeap(struct Sort *sort, int item, int heapIndex)
 {
 
-    int i = heapIndex;
-    while ((i != 1) && (item > sort->temp[i / 2]))
+    int i = heapIndex;                             // i = heapIndex
+    while ((i != 1) && (item > sort->temp[i / 2])) // heapIndex가 조상 노드가 아니고, 대입할 값이 부모 노드보다 크다면 while 실행
     {
-        sort->temp[i] = sort->temp[i / 2];
-        i /= 2;
+        sort->temp[i] = sort->temp[i / 2]; // temp[heapIndex] = temp[i/2](부모)
+        i /= 2;                            // heapIndex /= 2
     }
-    sort->temp[i] = item;
+    sort->temp[i] = item; // 최종 heapIndex에 대입
 
     return;
 }
 
+// 최대 힙 삭제 함수 입니다. 최대힙 값을 삭제한 것을 반환합니다.
 int deleteMaxheap(struct Sort *sort, int heapIndex)
 {
     int parent, child, item, temp;
-    item = sort->temp[1];
-    temp = sort->temp[heapIndex];
-    parent = 1, child = 2;
-    while (child <= heapIndex)
+    item = sort->temp[1];         // item = 조상 노드
+    temp = sort->temp[heapIndex]; // temp = temp[heapIndex]
+    parent = 1, child = 2;        // parent랑 child가 왔다갔다 하면서 하면서 값을 변경시킴. 그러므로 필요함.
+    while (child <= heapIndex)    // child <= heapIndex 가 작다면 while문 참.
     {
-        if ((child < heapIndex) && (sort->temp[child] < sort->temp[child + 1]))
-            child++;
-        if (temp >= sort->temp[child])
-            break;
-        sort->temp[parent] = sort->temp[child];
-        parent = child;
-        child *= 2;
+        if ((child < heapIndex) && (sort->temp[child] < sort->temp[child + 1])) // child가 heapIndex보다 작고 temp[child] 가 temp[child+1] 가 작다면
+            child++;                                                            // child ++;
+        if (temp >= sort->temp[child])                                          // child가 temp[child] 보다 작거나 같으면
+            break;                                                              // break;
+        sort->temp[parent] = sort->temp[child];                                 // temp[parent] = temp[child] 대입
+        parent = child;                                                         // parent = child;
+        child *= 2;                                                             // child * 2
     }
-    sort->temp[parent] = temp;
-    return item;
+    sort->temp[parent] = temp; // temp[parent] = temp 대입
+    return item;               // itep 반환
 }
 
+// 최대 힙 정렬의 시작점 이며, 최대 힙 생성, 최대 힙 삭제를 호출합니다. (반환값은 존재하지 않으며, 순차적입니다. )
 void funcHeapSort(struct Sort *sort)
 {
-    int heapIndex = 0;
-    for (int i = 0; i < sort->length; ++i)
+    int heapIndex = 0;                     // heapIndexd의 초기값은 0;
+    for (int i = 0; i < sort->length; ++i) // i ~ strlen(arr) - 1
     {
-        heapIndex++;
-        insertMaxHeap(sort, sort->arr[i], heapIndex);
+        heapIndex++;                                  //  heapIndex++
+        insertMaxHeap(sort, sort->arr[i], heapIndex); // insertMaxHeap 호출 -> 최대 힙 트리 생성
     }
 
-    for (int i = sort->length - 1; i >= 0; --i)
+    for (int i = sort->length - 1; i >= 0; --i) // 24 ~ 0
     {
-        sort->arr[i] = deleteMaxheap(sort, heapIndex);
-        heapIndex--;
+        sort->arr[i] = deleteMaxheap(sort, heapIndex); // deleteMaxHeap 호출 -> 최대 힙 트리 삭제
+        heapIndex--;                                   // heapIndex--
     }
 
     return;
@@ -279,15 +288,14 @@ void funcHeapSort(struct Sort *sort)
 // arr의 내용을 출력해주는 함수 입니다.
 void funcPrint(struct Sort *sort)
 {
-    for (int i = 0; i < sort->length; ++i)
-        printf("%d ", sort->arr[i]);
+    for (int i = 0; i < sort->length; ++i) // 0 ~ 24
+        printf("%d ", sort->arr[i]);       // 출력
 
     return;
 }
 
 void funcTermination(struct Sort *sort)
 {
-    free(sort);
-
+    free(sort); // 동적 할당 해제
     return;
 }

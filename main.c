@@ -4,20 +4,21 @@
 
 #include "sort.h"
 
+// 난수 생성 함수
 void randomNumber(struct Sort *sort)
 {
     for (int i = sort->startIndex; i < sort->length; ++i)
         sort->arr[i] = rand() % 101;
 }
 
-int main()
+int main(void)
 {
 
-    srand((unsigned)time(NULL));
-    struct Sort *sort = sort_init();
+    srand((unsigned)time(NULL));     // srand 초기화
+    struct Sort *sort = sort_init(); // sort 클래스(구조체) 생성 및 인스턴스화 (초기화)
 
     printf("***********************************\n");
-    printf("*** 여러가지 정렬 프로그램 구현 ***\n");
+    printf("*** 여러가지 정렬 프로그램 구현  ***\n");
     printf("***                             ***\n");
     printf("*** 1. 선택(selection) 정렬     ***\n");
     printf("*** 2. 삽입(insertion) 정렬     ***\n");
@@ -34,7 +35,7 @@ int main()
 
         randomNumber(sort);
         printf("번호 입력 : ");
-        scanf(" %d", &ticket);
+        scanf(" %d", &ticket); // ticket 입력
 
         switch (ticket)
         {
@@ -43,7 +44,7 @@ int main()
             printf("정렬 전 : ");
             sort->print(sort);
             printf("\n");
-            sort->selectSort(sort);
+            sort->selectSort(sort); // selectSort 함수 호출
             printf("정렬 후 : ");
             sort->print(sort);
             break;
@@ -53,7 +54,7 @@ int main()
             printf("정렬 전 : ");
             sort->print(sort);
             printf("\n");
-            sort->insertSort(sort);
+            sort->insertSort(sort); // insertSort 함수 호출
             printf("정렬 후 : ");
             sort->print(sort);
             break;
@@ -63,7 +64,7 @@ int main()
             printf("정렬 전 : ");
             sort->print(sort);
             printf("\n");
-            sort->bubbleSort(sort);
+            sort->bubbleSort(sort); // bubbleSort 함수 호출
             printf("정렬 후 : ");
             sort->print(sort);
             break;
@@ -73,7 +74,7 @@ int main()
             printf("정렬 전 : ");
             sort->print(sort);
             printf("\n");
-            sort->quickSort(sort);
+            sort->quickSort(sort); // quickSort 함수 호출
             printf("정렬 후 : ");
             sort->print(sort);
             break;
@@ -83,7 +84,7 @@ int main()
             printf("정렬 전 : ");
             sort->print(sort);
             printf("\n");
-            sort->mergeSort(sort);
+            sort->mergeSort(sort); // mergeSort 함수 호출
             printf("정렬 후 : ");
             sort->print(sort);
             break;
@@ -93,7 +94,7 @@ int main()
             printf("정렬 전 : ");
             sort->print(sort);
             printf("\n");
-            sort->heapSort(sort);
+            sort->heapSort(sort); // heapSort 함수 호출
             printf("정렬 후 : ");
             sort->print(sort);
             break;
